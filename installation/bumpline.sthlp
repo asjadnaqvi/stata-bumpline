@@ -32,7 +32,7 @@ The {opt by()} variable defines the groupings.{p_end}
 {p2coldent : {opt top(num)}}The number of rows to show in the graph. The default option is {top(10)}. All other values are dropped.{p_end}
 
 {p2coldent : {opt sel:ect(any|last)}}The option {opt sel(any)} selects {opt top()} for all x-axis categories. This is the default and also shows {opt by()} categories moving in and out
-of the {opt top()}. The option {opt sel(last)} tracks the path of the {top()} for the last x-axis category.{p_end}
+of the {opt top()}. The option {opt sel(last)} tracks the path of the {opt top()} for the last x-axis category.{p_end}
 
 {p2coldent : {opt smooth(num)}}The smoothing parameter that ranges from 1-8. The default value is {opt smooth(4)}. A value of 1 shows straight lines,
 while a value of 8 shows almost vertical jumps.{p_end}
