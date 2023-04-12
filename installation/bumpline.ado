@@ -1,4 +1,4 @@
-*! bumpline v1.0: First release
+*! bumpline v1.0 (10 May 2023): First release
 *! Asjad Naqvi (asjadnaqvi@gmail.com, @AsjadNaqvi)
 
 
