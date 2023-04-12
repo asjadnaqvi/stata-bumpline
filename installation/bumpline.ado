@@ -224,10 +224,10 @@ preserve
 	// draw
 
 	twoway ///
-		(scatter _rankrev `xvar' if _taglast==1				 , mlabel(`by') mlabpos( 3) mlabsize(`labsize') mc(none) mlabgap(1.5)) ///
+		(scatter _rankrev `xvar' if _taglast==1				 , mlabel(`by') mlabpos( 3) mlabsize(`labsize') mc(none) mlabgap(1.4)) ///
 		`marks' ///
 		`lines' ///
-		(scatter _rankrev `xvar' if _taglast==0 & _tagctry==1, mlabel(`by') mlabpos(12) mlabsize(`labsize') mc(none) mlabgap(1)) ///
+		(scatter _rankrev `xvar' if _taglast==0 & _tagctry==1, mlabel(`by') mlabpos(12) mlabsize(`labsize') mc(none) mlabgap(0.15)) ///
 		, ///
 		`title' `note' `subtitle' `xsize' `ysize' ///
 		xtitle("") ytitle("") ///
