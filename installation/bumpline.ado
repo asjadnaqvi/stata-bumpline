@@ -9,7 +9,7 @@ version 15
 	
 syntax varlist(min=2 max=2) [if] [in], by(varname)  ///
 	[ top(real 10) smooth(real 4) SELect(string) palette(string) offset(real 15)  ] ///
-	[ LABSize(string) MSize(string) MSYMbol(string) MLWIDth(string) LWidth(string) ]  ///
+	[ LABSize(string) MSize(string) MSYMbol(string) MLWIDth(string) MLColor(string) MColor(string) LWidth(string) ]  ///
 	[ XLABSize(string) YLABSize(string) XLABAngle(string) points(real 50) ] ///
 	[ xlabel(passthru) xtitle(passthru) title(passthru) subtitle(passthru) ] ///
 	[ note(passthru) scheme(passthru) name(passthru) xsize(passthru) ysize(passthru)  ] 
@@ -199,7 +199,23 @@ preserve
 		
 		local lines `lines' (line    _yval _xval if _group==`x', lw(`lwidth') lc("`r(p`clr')'") cmissing(n) )
 		
-		local marks `marks' (scatter _rankrev `xvar' if _group==`x' & _tagxy==1, msym(`msymbol') mlwidth(`mlwidth') msize(`msize')  mc("`r(p`clr')'") mlc("`r(p`clr')'") )
+		
+		if "`mcolor'" == "" {
+			local mclr `r(p`clr')'
+		}
+		else {
+			local mclr `mcolor'
+		}
+		
+		if "`mlcolor'" == "" {
+			local mlclr `r(p`clr')'
+		}
+		else {
+			local mlclr `mlcolor'
+		}
+		
+		
+		local marks `marks' (scatter _rankrev `xvar' if _group==`x' & _tagxy==1, msym(`msymbol') mlwidth(`mlwidth') msize(`msize')  mc("`mclr'") mlc("`mlclr'") )
 		
 	}
 
@@ -225,8 +241,8 @@ preserve
 
 	twoway ///
 		(scatter _rankrev `xvar' if _taglast==1				 , mlabel(`by') mlabpos( 3) mlabsize(`labsize') mc(none) mlabgap(1.4)) ///
-		`marks' ///
 		`lines' ///
+		`marks' ///
 		(scatter _rankrev `xvar' if _taglast==0 & _tagctry==1, mlabel(`by') mlabpos(12) mlabsize(`labsize') mc(none) mlabgap(0.15)) ///
 		, ///
 		`title' `note' `subtitle' `xsize' `ysize' `name' ///

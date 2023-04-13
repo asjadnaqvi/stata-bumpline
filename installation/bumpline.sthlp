@@ -14,7 +14,7 @@
 {cmd:bumpline} {it:y x} {ifin}, {cmd:by}(varname) 
 		{cmd:[} {cmd:top}({it:num}) {cmdab:sel:ect(any|last)} {cmd:smooth}({it:num}) {cmd:palette}({it:str}) {cmd:labcond}({it:str}) {cmd:offset}({it:num})
 		  {cmdab:lw:idth}({it:str}) {cmdab:labs:ize}({it:str}) {cmdab:xlabs:ize}({it:str}) {cmdab:ylabs:ize}({it:str}) {cmdab:xlaba:ngle}({it:str}) 
-		  {cmdab:msym:bol}({it:str}) {cmdab:ms:ize}({it:str}) {cmdab:mlwid:th}({it:str})
+		  {cmdab:msym:bol}({it:str}) {cmdab:ms:ize}({it:str}) {cmdab:mc:olor}({it:str}) {cmdab:mlc:olor}({it:str}) {cmdab:mlwid:th}({it:str})
 		  {cmd:xlabel}({it:str}) {cmd:xtitle}({it:str}) {cmd:ytitle}({it:str}) {cmd:title}({it:str}) {cmd:subtitle}({it:str}) {cmd:note}({it:str}) 
 		  {cmd:ysize}({it:num}) {cmd:xsize}({it:num}) {cmd:scheme}({it:str}) {cmd:name}({it:str}) {cmd:]}
 
@@ -51,11 +51,15 @@ while a value of 8 shows almost vertical jumps.{p_end}
 
 {p2coldent : {opt xlaba:ngle(str)}}Angle of the x-axis labels. Default is {opt xlaba(0)} for horizontal.{p_end}
 
-{p2coldent : {opt msym:bol(str)}}Symbol for markers. Default is {opt msym(2.5)}.{p_end}
+{p2coldent : {opt msym:bol(str)}}Symbol of the markers. Default is {opt msym(2.5)}.{p_end}
 
 {p2coldent : {opt ms:ize(str)}}Size of markers. Default is {opt ms(2)}.{p_end}
 
+{p2coldent : {opt mc:olor(str)}}Color of markers. Default is the line color.{p_end}
+
 {p2coldent : {opt mlwid:th(str)}}Size of marker outline width. Default is {opt mlwid(medium)}.{p_end}
+
+{p2coldent : {opt mlc:olor(str)}}Color of marker outline width. Default is the line color.{p_end}
 
 {p2coldent : {opt xtitle, ytitle, xsize, ysize}}These are standard twoway graph options.{p_end}
 
