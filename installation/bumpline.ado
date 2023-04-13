@@ -52,7 +52,7 @@ preserve
 
 	gen _mark = 1 if _rank <= `top' & _x==`last'
 
-	bysort country: egen _maxlast = max(_mark)
+	bysort `by': egen _maxlast = max(_mark)
 
 	
 	if "`select'"=="any" | "`select'"=="" {
