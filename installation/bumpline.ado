@@ -60,7 +60,7 @@ preserve
 	}
 	
 	if "`select'"=="last" {
-		keep if _maxlast==1 // (top 10 in last year only)
+		keep if _maxlast==1 // (top X in last year only)
 	}
 	
 	
@@ -229,7 +229,7 @@ preserve
 		`lines' ///
 		(scatter _rankrev `xvar' if _taglast==0 & _tagctry==1, mlabel(`by') mlabpos(12) mlabsize(`labsize') mc(none) mlabgap(0.15)) ///
 		, ///
-		`title' `note' `subtitle' `xsize' `ysize' ///
+		`title' `note' `subtitle' `xsize' `ysize' `name' ///
 		xtitle("") ytitle("") ///
 		ylabel(`ylist', valuelabels labsize(`ylabsize') ) ///
 		xlabel(`xlist', labsize(`xlabsize') angle(`xlabangle')) ///
