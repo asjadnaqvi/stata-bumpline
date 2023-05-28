@@ -1,11 +1,11 @@
-v 1.0
+v 1.1
 d {bf:BUMPLINE}: A Stata package for bump lines charts
 d
 d KW: Stata
 d KW: graphs
 d KW: bump line
 d
-d Distribution-Date: 20230410
+d Distribution-Date: 20230528
 d License: MIT
 d
 d Author: Asjad Naqvi

@@ -1,4 +1,4 @@
-*! bumpline v1.0 (10 May 2023): 
+*! bumpline v1.1 (28 May 2023): 
 *! Asjad Naqvi (asjadnaqvi@gmail.com, @AsjadNaqvi)
 
 * v1.1 (28 May 2023): ifin fixed. removed graph grid. isid added. added mlabsize for smaller labels.
