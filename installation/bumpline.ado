@@ -1,6 +1,8 @@
-*! bumpline v1.0 (10 May 2023): First release
+*! bumpline v1.0 (10 May 2023): 
 *! Asjad Naqvi (asjadnaqvi@gmail.com, @AsjadNaqvi)
 
+* v1.1 (28 May 2023): ifin fixed. removed graph grid. isid added. added mlabsize for smaller labels.
+* v1.0 (10 May 2023): First release
 
 cap prog drop bumpline
 
@@ -8,8 +10,8 @@ prog def bumpline, sortpreserve
 version 15
 	
 syntax varlist(min=2 max=2) [if] [in], by(varname)  ///
-	[ top(real 10) smooth(real 4) SELect(string) palette(string) offset(real 15)  ] ///
-	[ LABSize(string) MSize(string) MSYMbol(string) MLWIDth(string) MLColor(string) MColor(string) LWidth(string) ]  ///
+	[ top(real 50) smooth(real 4) SELect(string) palette(string) offset(real 15)  ] ///
+	[ LABSize(string) MLABSize(string) MSize(string) MSYMbol(string) MLWIDth(string) MLColor(string) MColor(string) LWidth(string) ]  ///
 	[ XLABSize(string) YLABSize(string) XLABAngle(string) points(real 50) ] ///
 	[ xlabel(passthru) xtitle(passthru) title(passthru) subtitle(passthru) ] ///
 	[ note(passthru) scheme(passthru) name(passthru) xsize(passthru) ysize(passthru)  ] 
@@ -28,11 +30,16 @@ syntax varlist(min=2 max=2) [if] [in], by(varname)  ///
 		exit
 	}	
 	
+	marksample touse, strok
 
 qui {	
 preserve	
 
+	keep if `touse'
+
 	keep `varlist' `by'
+
+	isid `varlist' `by'
 	
 	gettoken yvar xvar : varlist 
 	drop if `yvar' == .
@@ -231,7 +238,8 @@ preserve
 	levelsof _rankrev
 	local ylist = "`r(levels)'"
 	
-	if "`labsize'"   == "" local labsize   2.8
+	if "`labsize'"   == "" local labsize   2.2
+	if "`mlabsize'"   == "" local mlabsize 1.6
 	if "`xlabsize'"  == "" local xlabsize  2.5
 	if "`ylabsize'"  == "" local ylabsize  2.5
 	if "`xlabangle'" == "" local xlabangle 0
@@ -243,12 +251,12 @@ preserve
 		(scatter _rankrev `xvar' if _taglast==1				 , mlabel(`by') mlabpos( 3) mlabsize(`labsize') mc(none) mlabgap(1.4)) ///
 		`lines' ///
 		`marks' ///
-		(scatter _rankrev `xvar' if _taglast==0 & _tagctry==1, mlabel(`by') mlabpos(12) mlabsize(`labsize') mc(none) mlabgap(0.15)) ///
+		(scatter _rankrev `xvar' if _taglast==0 & _tagctry==1, mlabel(`by') mlabpos(12) mlabsize(`mlabsize') mc(none) mlabgap(0.15)) ///
 		, ///
 		`title' `note' `subtitle' `xsize' `ysize' `name' ///
 		xtitle("") ytitle("") ///
-		ylabel(`ylist', valuelabels labsize(`ylabsize') ) ///
-		xlabel(`xlist', labsize(`xlabsize') angle(`xlabangle')) ///
+		ylabel(`ylist', valuelabels labsize(`ylabsize') nogrid ) ///
+		xlabel(`xlist', labsize(`xlabsize') angle(`xlabangle') nogrid) ///
 		yscale(noline) ///
 		xscale(noline range(`xrmin' `xrmax')) ///
 		legend(off) 

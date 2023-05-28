@@ -1,7 +1,7 @@
 {smcl}
-{* 10Apr2023}{...}
+{* 28May2023}{...}
 {hi:help bumpline}{...}
-{right:{browse "https://github.com/asjadnaqvi/stata-bumpline":bumpline v1.0 (GitHub)}}
+{right:{browse "https://github.com/asjadnaqvi/stata-bumpline":bumpline v1.1 (GitHub)}}
 
 {hline}
 
@@ -14,7 +14,7 @@
 {cmd:bumpline} {it:y x} {ifin}, {cmd:by}(varname) 
 		{cmd:[} {cmd:top}({it:num}) {cmdab:sel:ect(any|last)} {cmd:smooth}({it:num}) {cmd:palette}({it:str}) {cmd:labcond}({it:str}) {cmd:offset}({it:num})
 		  {cmdab:lw:idth}({it:str}) {cmdab:labs:ize}({it:str}) {cmdab:xlabs:ize}({it:str}) {cmdab:ylabs:ize}({it:str}) {cmdab:xlaba:ngle}({it:str}) 
-		  {cmdab:msym:bol}({it:str}) {cmdab:ms:ize}({it:str}) {cmdab:mc:olor}({it:str}) {cmdab:mlc:olor}({it:str}) {cmdab:mlwid:th}({it:str})
+		  {cmdab:msym:bol}({it:str}) {cmdab:ms:ize}({it:str}) {cmdab:mc:olor}({it:str}) {cmdab:mlc:olor}({it:str}) {cmdab:mlwid:th}({it:str}) {cmdab:mlabs:ize}({it:str})
 		  {cmd:xlabel}({it:str}) {cmd:xtitle}({it:str}) {cmd:ytitle}({it:str}) {cmd:title}({it:str}) {cmd:subtitle}({it:str}) {cmd:note}({it:str}) 
 		  {cmd:ysize}({it:num}) {cmd:xsize}({it:num}) {cmd:scheme}({it:str}) {cmd:name}({it:str}) {cmd:]}
 
@@ -26,10 +26,10 @@ The options are described as follows:
 {synopthdr}
 {synoptline}
 
-{p2coldent : {opt bumparea y x, by(group)}}The command requires a numeric {it:y} variable and a numeric {it:x} variable. The x variable is usually a time variable.
+{p2coldent : {opt bumpline y x, by(group)}}The command requires a numeric {it:y} variable and a numeric {it:x} variable. The x variable is usually a time variable.
 The {opt by()} variable defines the groupings.{p_end}
 
-{p2coldent : {opt top(num)}}The number of rows to show in the graph. The default option is {top(10)}. All other values are dropped.{p_end}
+{p2coldent : {opt top(num)}}The number of rows to show in the graph. The default option is {opt top(50)}. All other values are dropped.{p_end}
 
 {p2coldent : {opt sel:ect(any|last)}}The option {opt sel(any)} selects {opt top()} for all x-axis categories. This is the default and also shows {opt by()} categories moving in and out
 of the {opt top()}. The option {opt sel(last)} tracks the path of the {opt top()} for the last x-axis category.{p_end}
@@ -43,7 +43,9 @@ while a value of 8 shows almost vertical jumps.{p_end}
 
 {p2coldent : {opt lw:idth(str)}}The line width of the area stroke. The default is {opt lw(0.8)}.{p_end}
 
-{p2coldent : {opt labs:ize(str)}}Size of the {opt by()} category labels. Default value is {opt labs(2.8)}.{p_end}
+{p2coldent : {opt labs:ize(str)}}Size of the {opt by()} category labels. Default value is {opt labs(2.2)}.{p_end}
+
+{p2coldent : {opt mlabs:ize(str)}}Size of the {opt by()} category labels that end in the middle. Default value is {opt mlabs(1.6)}.{p_end}
 
 {p2coldent : {opt xlabs:ize(str)}}Size of the x-axis labels. Default value is {opt xlabs(2.5)}.{p_end}
 
@@ -91,8 +93,8 @@ See {browse "https://github.com/asjadnaqvi/stata-bumpline":GitHub}.
 
 {title:Package details}
 
-Version      : {bf:bumpline} v1.0
-This release : 10 Apr 2023
+Version      : {bf:bumpline} v1.1
+This release : 28 May 2023
 First release: 10 Apr 2023
 Repository   : {browse "https://github.com/asjadnaqvi/stata-bumpline":GitHub}
 Keywords     : Stata, graph, bump chart, rank plot

@@ -1,4 +1,3 @@
-
 ![StataMin](https://img.shields.io/badge/stata-2015-blue) ![issues](https://img.shields.io/github/issues/asjadnaqvi/stata-bumpline) ![license](https://img.shields.io/github/license/asjadnaqvi/stata-bumpline) ![Stars](https://img.shields.io/github/stars/asjadnaqvi/stata-bumpline) ![version](https://img.shields.io/github/v/release/asjadnaqvi/stata-bumpline) ![release](https://img.shields.io/github/release-date/asjadnaqvi/stata-bumpline)
 
 ---
@@ -7,7 +6,7 @@
 
 ---
 
-# bumpline v1.0
+# bumpline v1.1
 
 ## Installation
 
@@ -19,7 +18,7 @@ SSC (**v1.0**):
 ssc install bumpline, replace
 ```
 
-GitHub (**v1.0**):
+GitHub (**v1.1**):
 
 ```
 net install bumpline, from("https://raw.githubusercontent.com/asjadnaqvi/stata-bumpline/main/installation/") replace
@@ -54,13 +53,13 @@ graph set window fontface "Arial Narrow"
 
 ## Syntax
 
-The syntax for **v1.0** is as follows:
+The syntax for **v1.1** is as follows:
 
 ```
 bumpline y x [if] [in], by(varname) 
                 [ top(num) select(any|last) smooth(num) palette(str) labcond(str) offset(num)
                   lwidth(str) labsize(str) xlabsize(str) ylabsize(str) xlabangle(str) 
-                  msymbol(str) msize(str) mlwidth(str)
+                  msymbol(str) msize(str) mlabsize(str) mlwidth(str)
                   xlabel(str) xtitle(str) ytitle(str) title(str) subtitle(str) note(str) 
                   ysize(num) xsize(num) scheme(str) name(str) ]
 
@@ -102,14 +101,14 @@ bumpline total_ghg year, by(country)
 
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	xsize(2) ysize(1) 
 ```
 
 <img src="/figures/bumpline2.png" height="400">
 
 ```
-bumpline total_ghg year, by(country) select(last) ///
+bumpline total_ghg year, by(country) select(last) top(10) ///
 	xsize(2) ysize(1) 
 ```
 
@@ -118,14 +117,14 @@ bumpline total_ghg year, by(country) select(last) ///
 ### Smooth
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	smooth(1) xsize(2) ysize(1) 
 ```
 
 <img src="/figures/bumpline4.png" height="400">
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	smooth(8) xsize(2) ysize(1) 	
 ```
 
@@ -135,14 +134,14 @@ bumpline total_ghg year, by(country) ///
 ### top lists
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	top(15) xsize(2) ysize(1) 	
 ```
 
 <img src="/figures/bumpline6.png" height="400">
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	top(20) xsize(2) ysize(1) 	
 ```
 
@@ -151,7 +150,7 @@ bumpline total_ghg year, by(country) ///
 ### Palettes
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	palette(CET L20) xsize(2) ysize(1) 
 ```
 
@@ -159,14 +158,14 @@ bumpline total_ghg year, by(country) ///
 
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	palette(viridis) xsize(2) ysize(1) 
 ```
 
 <img src="/figures/bumpline9.png" height="400">
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	palette(reds, reverse) xsize(2) ysize(1) 	
 ```
 
@@ -177,14 +176,14 @@ bumpline total_ghg year, by(country) ///
 ### Lines and symbols
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	lw(1.4) xsize(2) ysize(1)
 ```
 
 <img src="/figures/bumpline11.png" height="400">
 
 ```
-bumpline total_ghg year, by(country) ///
+bumpline total_ghg year, by(country) top(10) ///
 	lw(1.2) msym(square) msize(1.3) xsize(2) ysize(1)	
 ```
 
@@ -211,6 +210,13 @@ Please open an [issue](https://github.com/asjadnaqvi/stata-bumpline/issues) to r
 
 
 ## Change log
+
+**v1.1 (28 May 2023)**
+- Fixed `if` and `in` conditions that were not passing correctly.
+- Added checks for duplicates.
+- Removed graph grids.
+- Added `mlabsize()` for smaller labels.
+- Minor code cleanups, updates to defaults, and help file.
 
 **v1.0 (10 Apr 2023)**
 - Public release.
