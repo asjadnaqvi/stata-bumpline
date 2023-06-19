@@ -1,3 +1,6 @@
+
+![bumpline-1](https://github.com/asjadnaqvi/stata-bumpline/assets/38498046/97dc8e00-e39a-4a2a-862f-f3d41e39f56c)
+
 ![StataMin](https://img.shields.io/badge/stata-2015-blue) ![issues](https://img.shields.io/github/issues/asjadnaqvi/stata-bumpline) ![license](https://img.shields.io/github/license/asjadnaqvi/stata-bumpline) ![Stars](https://img.shields.io/github/stars/asjadnaqvi/stata-bumpline) ![version](https://img.shields.io/github/v/release/asjadnaqvi/stata-bumpline) ![release](https://img.shields.io/github/release-date/asjadnaqvi/stata-bumpline)
 
 ---
