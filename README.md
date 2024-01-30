@@ -102,7 +102,7 @@ Let's test the `bumpline` command:
 bumpline total_ghg year, by(country)
 ```
 
-<img src="/figures/bumpline1.png" height="400">
+<img src="/figures/bumpline1.png" width="100%">
 
 
 ```
@@ -110,14 +110,14 @@ bumpline total_ghg year, by(country) top(10) ///
 	xsize(2) ysize(1) 
 ```
 
-<img src="/figures/bumpline2.png" height="400">
+<img src="/figures/bumpline2.png" width="100%">
 
 ```
 bumpline total_ghg year, by(country) select(last) top(10) ///
 	xsize(2) ysize(1) 
 ```
 
-<img src="/figures/bumpline3.png" height="400">
+<img src="/figures/bumpline3.png" width="100%">
 
 ### Smooth
 
@@ -126,14 +126,14 @@ bumpline total_ghg year, by(country) top(10) ///
 	smooth(1) xsize(2) ysize(1) 
 ```
 
-<img src="/figures/bumpline4.png" height="400">
+<img src="/figures/bumpline4.png" width="100%">
 
 ```
 bumpline total_ghg year, by(country) top(10) ///
 	smooth(8) xsize(2) ysize(1) 	
 ```
 
-<img src="/figures/bumpline5.png" height="400">
+<img src="/figures/bumpline5.png" width="100%">
 
 
 ### top lists
@@ -143,14 +143,14 @@ bumpline total_ghg year, by(country) top(10) ///
 	top(15) xsize(2) ysize(1) 	
 ```
 
-<img src="/figures/bumpline6.png" height="400">
+<img src="/figures/bumpline6.png" width="100%">
 
 ```
 bumpline total_ghg year, by(country) top(10) ///
 	top(20) xsize(2) ysize(1) 	
 ```
 
-<img src="/figures/bumpline7.png" height="400">
+<img src="/figures/bumpline7.png" width="100%">
 
 ### Palettes
 
@@ -159,7 +159,7 @@ bumpline total_ghg year, by(country) top(10) ///
 	palette(CET L20) xsize(2) ysize(1) 
 ```
 
-<img src="/figures/bumpline8.png" height="400">
+<img src="/figures/bumpline8.png" width="100%">
 
 
 ```
@@ -167,14 +167,14 @@ bumpline total_ghg year, by(country) top(10) ///
 	palette(viridis) xsize(2) ysize(1) 
 ```
 
-<img src="/figures/bumpline9.png" height="400">
+<img src="/figures/bumpline9.png" width="100%">
 
 ```
 bumpline total_ghg year, by(country) top(10) ///
 	palette(reds, reverse) xsize(2) ysize(1) 	
 ```
 
-<img src="/figures/bumpline10.png" height="400">
+<img src="/figures/bumpline10.png" width="100%">
 
 
 
@@ -185,14 +185,14 @@ bumpline total_ghg year, by(country) top(10) ///
 	lw(1.4) xsize(2) ysize(1)
 ```
 
-<img src="/figures/bumpline11.png" height="400">
+<img src="/figures/bumpline11.png" width="100%">
 
 ```
 bumpline total_ghg year, by(country) top(10) ///
 	lw(1.2) msym(square) msize(1.3) xsize(2) ysize(1)	
 ```
 
-<img src="/figures/bumpline12.png" height="400">
+<img src="/figures/bumpline12.png" width="100%">
 
 ### all together
 
@@ -205,7 +205,7 @@ smooth(4) top(30) palette(CET L19, reverse) ///
 			xsize(2) ysize(1) 
 ```
 
-<img src="/figures/bumpline13.png" height="400">
+<img src="/figures/bumpline13.png" width="100%">
 
 
 
