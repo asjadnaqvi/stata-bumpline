@@ -2,7 +2,7 @@
 *! Asjad Naqvi (asjadnaqvi@gmail.com, @AsjadNaqvi)
 
 
-* v1.21 (11 Jun 2024): added wrap() for label wrapping. clode clean up
+* v1.21 (11 Jun 2024): added wrap() for label wrapping. Code clean up
 * v1.2  (10 Feb 2024): minor cleanups, fixes to how colors are assigned.
 * v1.1  (28 May 2023): ifin fixed. removed graph grid. isid added. added mlabsize for smaller labels.
 * v1.0  (10 May 2023): First release

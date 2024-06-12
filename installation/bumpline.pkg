@@ -1,5 +1,5 @@
 v 1.21
-d {bf:BUMPLINE}: A Stata package for bump lines charts
+d {bf:BUMPLINE}: A Stata package for bump lines charts or ribbon plots.
 d
 d KW: Stata
 d KW: graphs

@@ -10,7 +10,7 @@
 ---
 
 # bumpline v1.21
-(28 May 2023)
+(11 June 2024)
 
 
 ## Installation
@@ -238,6 +238,14 @@ Please open an [issue](https://github.com/asjadnaqvi/stata-bumpline/issues) to r
 
 
 ## Change log
+
+**v1.21 (11 Jun 2024)**
+- Added `wrap()` for label wrapping.
+- Several code improvements for faster rendering.
+
+**v1.2 (10 Feb 2024)**
+- Fixes to how colors are assigned.
+- Minor cleanups.
 
 **v1.1 (28 May 2023)**
 - Fixed `if` and `in` conditions that were not passing correctly.
