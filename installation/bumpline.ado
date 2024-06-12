@@ -1,8 +1,11 @@
-*! bumpline v1.1 (28 May 2023): 
+*! bumpline v1.21 (11 Jun 2024)
 *! Asjad Naqvi (asjadnaqvi@gmail.com, @AsjadNaqvi)
 
-* v1.1 (28 May 2023): ifin fixed. removed graph grid. isid added. added mlabsize for smaller labels.
-* v1.0 (10 May 2023): First release
+
+* v1.21 (11 Jun 2024): added wrap() for label wrapping. clode clean up
+* v1.2  (10 Feb 2024): minor cleanups, fixes to how colors are assigned.
+* v1.1  (28 May 2023): ifin fixed. removed graph grid. isid added. added mlabsize for smaller labels.
+* v1.0  (10 May 2023): First release
 
 cap prog drop bumpline
 
@@ -12,22 +15,19 @@ version 15
 syntax varlist(min=2 max=2) [if] [in], by(varname)  ///
 	[ top(real 50) smooth(real 4) SELect(string) palette(string) offset(real 15)  ] ///
 	[ LABSize(string) MLABSize(string) MSize(string) MSYMbol(string) MLWIDth(string) MLColor(string) MColor(string) LWidth(string) ]  ///
-	[ XLABSize(string) YLABSize(string) XLABAngle(string) points(real 50) ] ///
-	[ xlabel(passthru) xtitle(passthru) title(passthru) subtitle(passthru) ] ///
-	[ note(passthru) scheme(passthru) name(passthru) xsize(passthru) ysize(passthru)  ] 
+	[ XLABSize(string) YLABSize(string) XLABAngle(string) points(real 50) wrap(numlist >=0 max=1) * ] 
 	
 	
 	// check dependencies
 	capture findfile colorpalette.ado
 	if _rc != 0 {
-		display as error "colorpalette package is missing. Install the {stata ssc install colorpalette, replace:colorpalette} and {stata ssc install colrspace, replace:colrspace} packages."
+		display as error "The {bf:palettes} package is missing. Install the {stata ssc install palettes, replace:palettes} and {stata ssc install colrspace, replace:colrspace} packages."
 		exit
 	}
 	
 	capture findfile labmask.ado
 	if _rc != 0 {
 		qui ssc install labutil, replace
-		exit
 	}	
 	
 	marksample touse, strok
@@ -161,12 +161,11 @@ preserve
 	labmask _rankrev, val(_rank)
 		
 
-	if "`palette'" == "" local palette "tableau"
-	if "`lwidth'" == "" local lwidth 0.8
-	if "`msize'" == "" local msize 2
-	if "`msymbol'" == "" local msymbol circle
-	if "`mlwidth'" == "" local mlwidth medium
-	if "`palette'" == "" {
+	if "`lwidth'" 	== "" local lwidth 0.8
+	if "`msize'" 	== "" local msize 2
+	if "`msymbol'" 	== "" local msymbol circle
+	if "`mlwidth'" 	== "" local mlwidth medium
+	if "`palette'" 	== "" {
 		local palette tableau	
 	}
 	else {
@@ -177,9 +176,6 @@ preserve
 	
 	
 	egen _tagxy = tag(_group `xvar')
-	
-	summ _rankrev, meanonly
-	local items = r(max) + 1 // +1 to avoid white lines in some color schemes.
 	
 
 	levelsof _group, local(lvl)
@@ -201,7 +197,7 @@ preserve
 		}
 		
 
-		colorpalette `palette', nograph n(`items') `poptions'
+		colorpalette `palette', nograph n(`top') `poptions'
 		
 		
 		local lines `lines' (line    _yval _xval if _group==`x', lw(`lwidth') lc("`r(p`clr')'") cmissing(n) )
@@ -232,6 +228,24 @@ preserve
 	summ `xvar', meanonly
 	local xrmax = r(max) + ((r(max) - r(min)) * (`offset' / 100)) 	
 	
+	
+	if "`wrap'" != "" {
+		gen _lab2 = `by' if _taglast!=.
+		
+		gen _length = length(_lab2) if _lab2!= ""
+		summ _length, meanonly		
+		local _wraprounds = floor(`r(max)' / `wrap')
+		
+		forval i = 1 / `_wraprounds' {
+			local wraptag = `wrap' * `i'
+			replace _lab2 = substr(_lab2, 1, `wraptag') + "`=char(10)'" + substr(_lab2, `=`wraptag' + 1', .) if _length > `wraptag' & _lab2!= ""
+		}
+		
+		drop _length
+		local by _lab2
+	}		
+	
+	
 	levelsof `xvar'
 	local xlist = "`r(levels)'"
 	
@@ -239,7 +253,7 @@ preserve
 	local ylist = "`r(levels)'"
 	
 	if "`labsize'"   == "" local labsize   2.2
-	if "`mlabsize'"   == "" local mlabsize 1.6
+	if "`mlabsize'"  == "" local mlabsize  1.6
 	if "`xlabsize'"  == "" local xlabsize  2.5
 	if "`ylabsize'"  == "" local ylabsize  2.5
 	if "`xlabangle'" == "" local xlabangle 0
@@ -253,13 +267,12 @@ preserve
 		`marks' ///
 		(scatter _rankrev `xvar' if _taglast==0 & _tagctry==1, mlabel(`by') mlabpos(12) mlabsize(`mlabsize') mc(none) mlabgap(0.15)) ///
 		, ///
-		`title' `note' `subtitle' `xsize' `ysize' `name' ///
 		xtitle("") ytitle("") ///
 		ylabel(`ylist', valuelabels labsize(`ylabsize') nogrid ) ///
 		xlabel(`xlist', labsize(`xlabsize') angle(`xlabangle') nogrid) ///
 		yscale(noline) ///
 		xscale(noline range(`xrmin' `xrmax')) ///
-		legend(off) 
+		legend(off)  `options' 
 
 		
 */	

@@ -1,7 +1,7 @@
 {smcl}
-{* 28May2023}{...}
+{* 11Jun2024}{...}
 {hi:help bumpline}{...}
-{right:{browse "https://github.com/asjadnaqvi/stata-bumpline":bumpline v1.1 (GitHub)}}
+{right:{browse "https://github.com/asjadnaqvi/stata-bumpline":bumpline v1.21 (GitHub)}}
 
 {hline}
 
@@ -13,10 +13,9 @@
 
 {cmd:bumpline} {it:y x} {ifin}, {cmd:by}(varname) 
 		{cmd:[} {cmd:top}({it:num}) {cmdab:sel:ect(any|last)} {cmd:smooth}({it:num}) {cmd:palette}({it:str}) {cmd:labcond}({it:str}) {cmd:offset}({it:num})
-		  {cmdab:lw:idth}({it:str}) {cmdab:labs:ize}({it:str}) {cmdab:xlabs:ize}({it:str}) {cmdab:ylabs:ize}({it:str}) {cmdab:xlaba:ngle}({it:str}) 
-		  {cmdab:msym:bol}({it:str}) {cmdab:ms:ize}({it:str}) {cmdab:mc:olor}({it:str}) {cmdab:mlc:olor}({it:str}) {cmdab:mlwid:th}({it:str}) {cmdab:mlabs:ize}({it:str})
-		  {cmd:xlabel}({it:str}) {cmd:xtitle}({it:str}) {cmd:ytitle}({it:str}) {cmd:title}({it:str}) {cmd:subtitle}({it:str}) {cmd:note}({it:str}) 
-		  {cmd:ysize}({it:num}) {cmd:xsize}({it:num}) {cmd:scheme}({it:str}) {cmd:name}({it:str}) {cmd:]}
+		  {cmdab:lw:idth}({it:str}) {cmdab:labs:ize}({it:str}) {cmdab:xlabs:ize}({it:str}) {cmdab:ylabs:ize}({it:str}) {cmdab:xlaba:ngle}({it:str}) {cmd:wrap}({it:num})
+		  {cmdab:msym:bol}({it:str}) {cmdab:ms:ize}({it:str}) {cmdab:mc:olor}({it:str}) {cmdab:mlc:olor}({it:str}) {cmdab:mlwid:th}({it:str}) {cmdab:mlabs:ize}({it:str})  *
+        {cmd:]}
 
 
 {p 4 4 2}
@@ -43,6 +42,8 @@ while a value of 8 shows almost vertical jumps.{p_end}
 
 {p2coldent : {opt lw:idth(str)}}The line width of the area stroke. The default is {opt lw(0.8)}.{p_end}
 
+{p2coldent : {opt wrap(num)}}Wrap the labels after a number of characters. For example, {opt wrap(50)} will wrap labels every 50 characters.{p_end}
+
 {p2coldent : {opt labs:ize(str)}}Size of the {opt by()} category labels. Default value is {opt labs(2.2)}.{p_end}
 
 {p2coldent : {opt mlabs:ize(str)}}Size of the {opt by()} category labels that end in the middle. Default value is {opt mlabs(1.6)}.{p_end}
@@ -63,11 +64,7 @@ while a value of 8 shows almost vertical jumps.{p_end}
 
 {p2coldent : {opt mlc:olor(str)}}Color of marker outline width. Default is the line color.{p_end}
 
-{p2coldent : {opt xtitle, ytitle, xsize, ysize}}These are standard twoway graph options.{p_end}
-
-{p2coldent : {opt title, subtitle, note, name}}These are standard twoway graph options.{p_end}
-
-{p2coldent : {opt scheme(string)}}Load the custom scheme. Above options can be used to fine tune individual elements.{p_end}
+{p2coldent : {opt *}}All other standard twoway options.{p_end}
 
 {synoptline}
 {p2colreset}{...}
@@ -88,13 +85,11 @@ See {browse "https://github.com/asjadnaqvi/stata-bumpline":GitHub}.
 
 {hline}
 
-{title:Acknowledgements}
-
 
 {title:Package details}
 
-Version      : {bf:bumpline} v1.1
-This release : 28 May 2023
+Version      : {bf:bumpline} v1.21
+This release : 11 Jun 2024
 First release: 10 Apr 2023
 Repository   : {browse "https://github.com/asjadnaqvi/stata-bumpline":GitHub}
 Keywords     : Stata, graph, bump chart, rank plot
@@ -107,7 +102,23 @@ Twitter      : {browse "https://twitter.com/AsjadNaqvi":@AsjadNaqvi}
 
 {title:Feedback}
 
-Please submit bugs, errors, feature requests on {browse "https://github.com/asjadnaqvi/stata-alluvial/issues":GitHub} by opening a new issue.
+Please submit bugs, errors, feature requests on {browse "https://github.com/asjadnaqvi/stata-bumpline/issues":GitHub} by opening a new issue.
+
+{title:Citation guidelines}
+
+Suggested citation guidlines for this package:
+
+Naqvi, A. (2024). Stata package "bumpline" version 1.21. Release date 11 June 2024. https://github.com/asjadnaqvi/stata-bumpline.
+
+@software{bumpline,
+   author = {Naqvi, Asjad},
+   title = {Stata package ``bumpline''},
+   url = {https://github.com/asjadnaqvi/stata-bumpline},
+   version = {1.21},
+   date = {2024-06-11}
+}
+
+
 
 {title:References}
 
@@ -120,4 +131,6 @@ Please submit bugs, errors, feature requests on {browse "https://github.com/asja
 
 {psee}
     {helpb arcplot}, {helpb alluvial}, {helpb bimap}, {helpb bumparea}, {helpb bumpline}, {helpb circlebar}, {helpb circlepack}, {helpb clipgeo}, {helpb delaunay}, {helpb joyplot}, 
-	{helpb marimekko}, {helpb sankey}, {helpb schemepack}, {helpb spider}, {helpb streamplot}, {helpb sunburst}, {helpb treecluster}, {helpb treemap}
+	{helpb marimekko}, {helpb polarspike}, {helpb sankey}, {helpb schemepack}, {helpb spider}, {helpb streamplot}, {helpb sunburst}, {helpb treecluster}, {helpb treemap}, {helpb waffle}
+	
+or visit {browse "https://github.com/asjadnaqvi":GitHub} for detailed documentation and examples.		

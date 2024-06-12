@@ -1,7 +1,7 @@
-v 1.0
+v 1.21
 d BUMPLINE: A Stata package for bump line charts
 d  
-d Distribution-Date: 20230410
+d Distribution-Date: 20240611
 d
 d Asjad Naqvi
 d asjadnaqvi@gmail.com

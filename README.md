@@ -9,7 +9,7 @@
 
 ---
 
-# bumpline v1.1
+# bumpline v1.21
 (28 May 2023)
 
 
@@ -23,7 +23,7 @@ SSC (**v1.1**):
 ssc install bumpline, replace
 ```
 
-GitHub (**v1.1**):
+GitHub (**v1.21**):
 
 ```
 net install bumpline, from("https://raw.githubusercontent.com/asjadnaqvi/stata-bumpline/main/installation/") replace
@@ -58,15 +58,13 @@ graph set window fontface "Arial Narrow"
 
 ## Syntax
 
-The syntax for **v1.1** is as follows:
+The syntax for the latest version is as follows:
 
-```
+```stata
 bumpline y x [if] [in], by(varname) 
                 [ top(num) select(any|last) smooth(num) palette(str) labcond(str) offset(num)
                   lwidth(str) labsize(str) xlabsize(str) ylabsize(str) xlabangle(str) 
-                  msymbol(str) msize(str) mlabsize(str) mlwidth(str)
-                  xlabel(str) xtitle(str) ytitle(str) title(str) subtitle(str) note(str) 
-                  ysize(num) xsize(num) scheme(str) name(str) ]
+                  msymbol(str) msize(str) mlabsize(str) mlwidth(str) wrap(num) * ]
 
 ```
 
@@ -79,6 +77,31 @@ bumparea y x, by(group)
 ```
 
 where `y` is a numerical variable we want to plot and `x` is the time dimension. Both need to be numeric. The `by()` is the category variable.
+
+
+## Citation guidelines
+Software packages take countless hours of programming, testing, and bug fixing. If you use this package, then a citation would be highly appreciated. Suggested citations:
+
+*in BibTeX*
+
+```
+@software{bumpline,
+   author = {Naqvi, Asjad},
+   title = {Stata package ``bumpline''},
+   url = {https://github.com/asjadnaqvi/stata-bumpline},
+   version = {1.21},
+   date = {2024-06-11}
+}
+```
+
+*or simple text*
+
+```
+Naqvi, A. (2024). Stata package "bumpline" version 1.21. Release date 11 June 2024. https://github.com/asjadnaqvi/stata-bumpline.
+```
+
+
+*or see [SSC citation](https://ideas.repec.org/c/boc/bocode/s459195.html) (updated once a new version is submitted)*
 
 
 
