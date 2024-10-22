@@ -112,7 +112,7 @@ Naqvi, A. (2024). Stata package "bumpline" version 1.3. Release date 22 October 
 
 Load the Stata dataset
 
-```
+```stata
 use "https://github.com/asjadnaqvi/stata-bumpline/blob/main/data/owid_emissions_reduced.dta?raw=true", clear
 
 drop if iso_code==""
@@ -273,14 +273,20 @@ smooth(4) top(20) palette(CET L04) ///
 
 
 ```stata
+use "https://github.com/asjadnaqvi/stata-bumpline/blob/main/data/owid_emissions_reduced.dta?raw=true", clear
+drop if iso_code==""
+drop if year < 1995
+
 levelsof year if !missing(gdp)
 
-bumpline total_ghg year [fw = gdp], by(country) wrap(20) dropother  ///	
-smooth(8) top(15) palette(CET L20, reverse) labc(white) ///
-	lw(0.8) msym(square) mlwid(0.3) msize(0.4) xlabel("`r(levels)'", angle(90) labsize(2)) offset(10) labsize(2.6)  ///
+
+bumpline total_ghg year [aw = gdp], by(country) wrap(20) dropother  ///	
+smooth(8) top(16) palette(CET L20, reverse) labc(white) ///
+	lw(0.8) msym(square) mlwid(0.3) msize(0.5) xlabel("`r(levels)'", angle(90) labsize(2)) offset(10) labsize(2.6)  ///
 	title("{fontface Merriweather Bold:Top 30 countries by annual GHG emissions (GDP weighted)}",  size(6)) ///
 			note("Source: Our World in Data. bumpline package.", size(1.6)) ///
 			xsize(3) ysize(1) scheme(neon)
+
 ```
 
 <img src="/figures/bumpline15.png" width="100%">
