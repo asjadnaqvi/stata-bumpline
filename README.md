@@ -9,8 +9,8 @@
 
 ---
 
-# bumpline v1.21
-(11 June 2024)
+# bumpline v1.3
+(22 October 2024)
 
 
 ## Installation
@@ -23,22 +23,21 @@ SSC (**v1.21**):
 ssc install bumpline, replace
 ```
 
-GitHub (**v1.21**):
+GitHub (**v1.3**):
 
 ```
 net install bumpline, from("https://raw.githubusercontent.com/asjadnaqvi/stata-bumpline/main/installation/") replace
 ```
 
 
-
-The `palettes` package is required to run this command:
+Please make sure that you have the latest versions of the following packages installed:
 
 ```
 ssc install palettes, replace
 ssc install colrspace, replace
+ssc install graphfunctions, replace
 ```
 
-Even if you have these packages installed, please check for updates: `ado update, update`.
 
 If you want to make a clean figure, then it is advisable to load a clean scheme. These are several available and I personally use the following:
 
@@ -61,11 +60,15 @@ graph set window fontface "Arial Narrow"
 The syntax for the latest version is as follows:
 
 ```stata
-bumpline y x [if] [in], by(varname) 
-                [ top(num) select(any|last) smooth(num) palette(str) labcond(str) offset(num)
-                  lwidth(str) labsize(str) xlabsize(str) ylabsize(str) xlabangle(str) 
-                  msymbol(str) msize(str) mlabsize(str) mlwidth(str) wrap(num) * ]
-
+bumpline y x [if] [in] [weight], by(varname) 
+                [ top(num) select(any|last) smooth(num) palette(str) labcond(str) offset(num) dropother wrap(num) stat(mean|sum) 
+                  lwidth(str) lpattern(str) 
+                  msize(str) msymbol(str) mcolor(str) mlcolor(str) mlwidth(str) 
+                  labsize(str) labcolor(str) labangle(str) labposition(str) labgap(str)
+                  olcolor(str) olwidth(str) olpattern(str)   
+                  omcolor(str) omsymbol(str) omsize(str) omlcolor(str) omlwidth(str)   
+                  olabsize(str) olabcolor(str) olabangle(str) olabposition(str) olabgap(str)
+                  ylabsize(str) * ]
 ```
 
 See the help file `help bumpline` for details.
@@ -89,15 +92,15 @@ Software packages take countless hours of programming, testing, and bug fixing. 
    author = {Naqvi, Asjad},
    title = {Stata package ``bumpline''},
    url = {https://github.com/asjadnaqvi/stata-bumpline},
-   version = {1.21},
-   date = {2024-06-11}
+   version = {1.3},
+   date = {2024-10-22}
 }
 ```
 
 *or simple text*
 
 ```
-Naqvi, A. (2024). Stata package "bumpline" version 1.21. Release date 11 June 2024. https://github.com/asjadnaqvi/stata-bumpline.
+Naqvi, A. (2024). Stata package "bumpline" version 1.3. Release date 22 October 2024. https://github.com/asjadnaqvi/stata-bumpline.
 ```
 
 
@@ -175,6 +178,14 @@ bumpline total_ghg year, by(country) top(10) ///
 
 <img src="/figures/bumpline7.png" width="100%">
 
+
+```
+bumpline total_ghg year, by(country) top(10) dropother ///
+	top(20) xsize(2) ysize(1) 	
+```
+
+<img src="/figures/bumpline7_1.png" width="100%">
+
 ### Palettes
 
 ```
@@ -217,18 +228,62 @@ bumpline total_ghg year, by(country) top(10) ///
 
 <img src="/figures/bumpline12.png" width="100%">
 
-### all together
 
-```
-bumpline total_ghg year, by(country) ///	
-smooth(4) top(30) palette(CET L19, reverse) ///
-	lw(0.5) msym(square) mlwid(0.3) msize(1.1) xlaba(45) offset(20)  ///
-	title("Top 10 countries by annual GHG emissions", size(6)) ///
+
+```stata
+bumpline total_ghg year, by(country)  top(12) ///	
+smooth(4) palette(CET L04) ///
+	lw(0.8) msym(square) mlwid(0.3) msize(1)  offset(20)  ///
+	title("Top 30 countries by annual GHG emissions", size(6)) ///
 			note("Source: OWID.") ///
-			xsize(2) ysize(1) 
+			xsize(4) ysize(2) 
 ```
 
 <img src="/figures/bumpline13.png" width="100%">
+
+
+```stata
+bumpline total_ghg year, by(country)  top(12) ///	
+smooth(4) palette(CET L04) ///
+	lw(0.8) msym(square) mlwid(0.3) msize(1)  offset(20)  ///
+	title("Top 30 countries by annual GHG emissions", size(6)) ///
+			note("Source: OWID.") ///
+			xsize(4) ysize(2) 
+```
+
+<img src="/figures/bumpline13.png" width="100%">
+
+
+### v1.3
+
+```stata
+graph set window fontface "Abel"
+
+bumpline total_ghg year, by(country)   ///	
+smooth(4) top(20) palette(CET L04) ///
+	lw(0.5) msym(square) mlwid(0.3) msize(0.4) xlabel(, angle(90)) offset(20) labsize(2)  ///
+	title("{fontface Merriweather Bold:Top 30 countries by annual GHG emissions}", size(6)) ///
+			note("Source: Our World in Data. bumpline package. @AsjadNaqvi.") ///
+			xsize(8) ysize(5) 
+```
+
+<img src="/figures/bumpline14.png" width="100%">
+
+
+
+
+```stata
+levelsof year if !missing(gdp)
+
+bumpline total_ghg year [fw = gdp], by(country) wrap(20) dropother  ///	
+smooth(8) top(15) palette(CET L20, reverse) labc(white) ///
+	lw(0.8) msym(square) mlwid(0.3) msize(0.4) xlabel("`r(levels)'", angle(90) labsize(2)) offset(10) labsize(2.6)  ///
+	title("{fontface Merriweather Bold:Top 30 countries by annual GHG emissions (GDP weighted)}",  size(6)) ///
+			note("Source: Our World in Data. bumpline package.", size(1.6)) ///
+			xsize(3) ysize(1) scheme(neon)
+```
+
+<img src="/figures/bumpline15.png" width="100%">
 
 
 
@@ -238,6 +293,15 @@ Please open an [issue](https://github.com/asjadnaqvi/stata-bumpline/issues) to r
 
 
 ## Change log
+
+**v1.3 (22 October 2024)**
+- `wrap()` ported to `graphfunctions`. 
+- Weights are now allowed.
+- Added options `stat(mean)` and `stat(sum)` (default) for collapsing the data. If the data has duplicate values, collapse will be used and a warning message will be displayed.
+- Added `dropther` to drop `by()` categories that start and end in the middle.
+- All possible line, marker, symbol, other line, other marker, other symbol options added for maximum control.
+- Removed x-axis options. Use the standard `xlabel()` with standard options. This provides the most control over the axis.
+- Major code clean up.
 
 **v1.21 (11 Jun 2024)**
 - Added `wrap()` for label wrapping.

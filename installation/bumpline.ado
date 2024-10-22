@@ -1,7 +1,7 @@
-*! bumpline v1.21 (11 Jun 2024)
+*! bumpline v1.3 (22 Oct 2024)
 *! Asjad Naqvi (asjadnaqvi@gmail.com, @AsjadNaqvi)
 
-
+* v1.3  (22 Oct 2024): stat(mean|sum) added. default is sum. xlabel options removed. dropother added. extensive label, line, marker control options added.
 * v1.21 (11 Jun 2024): added wrap() for label wrapping. Code clean up
 * v1.2  (10 Feb 2024): minor cleanups, fixes to how colors are assigned.
 * v1.1  (28 May 2023): ifin fixed. removed graph grid. isid added. added mlabsize for smaller labels.
@@ -12,10 +12,16 @@ cap prog drop bumpline
 prog def bumpline, sortpreserve
 version 15
 	
-syntax varlist(min=2 max=2) [if] [in], by(varname)  ///
-	[ top(real 50) smooth(real 4) SELect(string) palette(string) offset(real 15)  ] ///
-	[ LABSize(string) MLABSize(string) MSize(string) MSYMbol(string) MLWIDth(string) MLColor(string) MColor(string) LWidth(string) ]  ///
-	[ XLABSize(string) YLABSize(string) XLABAngle(string) points(real 50) wrap(numlist >=0 max=1) * ] 
+syntax varlist(min=2 max=2) [if] [in] [aw fw pw iw/], by(varname)  ///
+	[ top(real 10) smooth(real 4) SELect(string) palette(string) offset(real 15)  ] ///
+	[ YLABSize(string) points(real 50) wrap(numlist >=0 max=1) * stat(string) dropother ]  ///
+	[ LWidth(string) LPattern(string) ]  ///    // standard lines
+	[ MSize(string) MSYMbol(string) MLWidth(string) MLColor(string) MColor(string) ] ///   // standard markers
+	[ LABSize(string)  LABColor(string) LABAngle(string) LABPosition(string) LABGap(string)    ] 	///		// standard labels	
+	[ OLColor(string) OLWidth(string) OLPattern(string) ] ///  // other lines // v1.3
+	[ OMColor(string) OMLWidth(string) OMLColor(string) OMSYMbol(string) OMSize(string) ] ///  // other markers
+	[ OLABSize(string) OLABColor(string) OLABAngle(string) OLABPosition(string) OLABGap(string) ] ///  // other labels
+	
 	
 	
 	// check dependencies
@@ -26,24 +32,47 @@ syntax varlist(min=2 max=2) [if] [in], by(varname)  ///
 	}
 	
 	capture findfile labmask.ado
-	if _rc != 0 {
-		qui ssc install labutil, replace
+		if _rc != 0 quietly ssc install labutil, replace
+		
+	capture findfile labsplit.ado
+		if _rc != 0 quietly ssc install graphfunctions, replace				
+	
+	
+	if "`stat'" != "" & !inlist("`stat'", "mean", "sum") {
+		display as error "Valid options are {bf:stat(mean)} [default] or {bf:stat(sum)}."
+		exit
 	}	
 	
 	marksample touse, strok
 
-qui {	
+quietly {	
 preserve	
 
 	keep if `touse'
 
-	keep `varlist' `by'
+	keep `varlist' `by' `exp'
 
-	isid `varlist' `by'
 	
 	gettoken yvar xvar : varlist 
-	drop if `yvar' == .
+	
+	drop if missing(`yvar')
 
+	
+	if "`stat'" == "" local stat sum
+	
+	duplicates tag `by' `xvar', gen(_dups)
+	summ _dups, meanonly
+
+	
+	if `r(max)'> 0 {
+		noisily display in yellow "{it:`xvar'} and {it:`by'} duplicates combined using {it:stat(`stat')}. See {stata help bumpline} or prepare the data before running the command." 
+	}
+	
+	
+	if "`weight'" != "" local myweight  [`weight' = `exp']	
+
+	collapse (`stat') `yvar' `myweight', by(`by' `xvar')	
+	
 	egen _x = group(`xvar')
 
 	gsort `xvar' -`yvar'
@@ -60,7 +89,8 @@ preserve
 	gen _mark = 1 if _rank <= `top' & _x==`last'
 
 	bysort `by': egen _maxlast = max(_mark)
-
+	recode _maxlast (.=0)
+	
 	
 	if "`select'"=="any" | "`select'"=="" {
 		drop if _rank > `top'  // hard ranks 
@@ -134,7 +164,7 @@ preserve
 			summ `xvar' if _group==`y' & _x==`j', meanonly 
 			local xmax = r(max)
 			
-			replace _xval = (`xmax' - `xmin') * (_xnorm - 0) / (1 - 0) + `xmin'  if _x==`i' & _group==`y'	
+			replace _xval = (`xmax' - `xmin') * (_xnorm) + `xmin'  if _x==`i' & _group==`y'	
 			
 			// y
 			summ _rankrev if _group==`y' & _x==`i', meanonly
@@ -143,7 +173,7 @@ preserve
 			summ _rankrev if _group==`y' & _x==`j', meanonly 
 			local ymax = r(max)
 			
-			replace _yval = (`ymax' - `ymin') * (_ynorm - 0) / (1 - 0) + `ymin'  if _x==`i' & _group==`y'
+			replace _yval = (`ymax' - `ymin') * (_ynorm)  + `ymin'  if _x==`i' & _group==`y'
 			
 			
 			summ _ranklast if _group==`y' & _mark==1, meanonly
@@ -155,13 +185,15 @@ preserve
 
 	// prepare to draw
 
-	summ _rank
+	summ _rank, meanonly
 	local ymin = r(min)
 	local ymax = r(max)
 	labmask _rankrev, val(_rank)
 		
 
 	if "`lwidth'" 	== "" local lwidth 0.8
+	if "`lpattern'" == "" local lpattern solid
+	
 	if "`msize'" 	== "" local msize 2
 	if "`msymbol'" 	== "" local msymbol circle
 	if "`mlwidth'" 	== "" local mlwidth medium
@@ -177,9 +209,10 @@ preserve
 	
 	egen _tagxy = tag(_group `xvar')
 	
+	
+	
 
 	levelsof _group, local(lvl)
-	
 
 	foreach x of local lvl {
 		
@@ -200,7 +233,7 @@ preserve
 		colorpalette `palette', nograph n(`top') `poptions'
 		
 		
-		local lines `lines' (line    _yval _xval if _group==`x', lw(`lwidth') lc("`r(p`clr')'") cmissing(n) )
+		local lines `lines' (line _yval _xval if _group==`x' & _maxlast==1, lw(`lwidth') lp(`lpattern') lc("`r(p`clr')'") cmissing(n))
 		
 		
 		if "`mcolor'" == "" {
@@ -218,10 +251,41 @@ preserve
 		}
 		
 		
-		local marks `marks' (scatter _rankrev `xvar' if _group==`x' & _tagxy==1, msym(`msymbol') mlwidth(`mlwidth') msize(`msize')  mc("`mclr'") mlc("`mlclr'") )
+		local marks `marks' (scatter _rankrev `xvar' if _group==`x' & _tagxy==1 & _maxlast==1, msym(`msymbol') mlwidth(`mlwidth') msize(`msize')  mc("`mclr'") mlc("`mlclr'") )
 		
 	}
 
+	
+	if "`olwidth'"  == "" local olwidth `lwidth'
+	if "`olcolor'"  == "" local olcolor  gs12
+	if "`olpattern'"  == "" local olpattern  solid
+	
+	if "`omsymbol'" == "" local omsymbol `msymbol'
+	if "`omlwidth'" == "" local omlwidth `mlwidth'
+	if "`omlcolor'" == "" local omlcolor `olcolor'
+	
+	if "`omsize'"   == "" local omsize   `msize'
+	if "`omcolor'"  == "" local omcolor  gs12
+	
+	if "`labsize'"       == "" local labsize   		2.2
+	if "`labgap'"        == "" local labgap   		1.5
+	if "`labangle'"      == "" local labangle  		0
+	if "`labcolor'"      == "" local labcolor  		black
+	if "`labposition'"   == "" local labposition  	3
+	
+	if "`olabsize'"      == "" local olabsize 		1.8
+	if "`olabcolor'"     == "" local olabcolor  	black
+	if "`olabposition'"  == "" local olabposition  	12
+	if "`olabangle'"     == "" local olabangle	   	0
+	if "`olabgap'"     	 == "" local olabgap	   	1.5	
+	
+
+	if "`dropother'" == "" {
+		local line2 (line    _yval _xval     if             _maxlast==0, lpattern(`oldpattern') lwidth(`olwidth') lcolor(`olcolor') cmissing(n) )
+		local mark2 (scatter _rankrev `xvar' if _tagxy==1 & _maxlast==0, msymbol(`omsymbol') mlwidth(`omlwidth') msize(`omsize')  mcolor(gs10) mlcolor(`omlcolor') )
+		local scat2 (scatter _rankrev `xvar' if _taglast==0 & _tagctry==1, mlabel(`by') mcolor(none) mlabpos(`olabposition') mlabsize(`olabsize') mlabcolor(`olabcolor') mlabangle(`olabangle') mlabgap(`olabgap')) 
+	}
+	
 	// control the x axis
 	summ `xvar', meanonly
 	local xrmin = `r(min)'
@@ -229,47 +293,55 @@ preserve
 	local xrmax = r(max) + ((r(max) - r(min)) * (`offset' / 100)) 	
 	
 	
+	
+	
+	
+
 	if "`wrap'" != "" {
-		gen _lab2 = `by' if _taglast!=.
 		
-		gen _length = length(_lab2) if _lab2!= ""
-		summ _length, meanonly		
-		local _wraprounds = floor(`r(max)' / `wrap')
 		
-		forval i = 1 / `_wraprounds' {
-			local wraptag = `wrap' * `i'
-			replace _lab2 = substr(_lab2, 1, `wraptag') + "`=char(10)'" + substr(_lab2, `=`wraptag' + 1', .) if _length > `wraptag' & _lab2!= ""
+		cap confirm numeric var `by'		
+		
+		if _rc!=0 {  // if string
+			gen _lab2_temp = `by'
+		}
+		else {
+			if "`: value label `by''" != "" {
+				decode `by', gen(_lab2_temp)
+			}
+			else {
+				gen _lab2_temp = string(`by')
+			}
 		}
 		
-		drop _length
+		
+		labsplit _lab2_temp, wrap(`wrap') gen(_lab2)
+		drop _lab2_temp
 		local by _lab2
 	}		
 	
 	
-	levelsof `xvar'
-	local xlist = "`r(levels)'"
-	
 	levelsof _rankrev
 	local ylist = "`r(levels)'"
 	
-	if "`labsize'"   == "" local labsize   2.2
-	if "`mlabsize'"  == "" local mlabsize  1.6
-	if "`xlabsize'"  == "" local xlabsize  2.5
-	if "`ylabsize'"  == "" local ylabsize  2.5
-	if "`xlabangle'" == "" local xlabangle 0
-	
 
-	// draw
+	
+	if "`ylabsize'"      == "" local ylabsize  2.5	
+
+	//////////////
+	// 	draw 	//
+	//////////////
 
 	twoway ///
-		(scatter _rankrev `xvar' if _taglast==1				 , mlabel(`by') mlabpos( 3) mlabsize(`labsize') mc(none) mlabgap(1.4)) ///
+		(scatter _rankrev `xvar' if _taglast==1				 , mlabel(`by') mlabpos(`labposition') mlabsize(`labsize') mc(none) mlabgap(`labgap') mlabangle(`labangle') mlabcolor(`labcolor')) ///
 		`lines' ///
 		`marks' ///
-		(scatter _rankrev `xvar' if _taglast==0 & _tagctry==1, mlabel(`by') mlabpos(12) mlabsize(`mlabsize') mc(none) mlabgap(0.15)) ///
+		`line2'	///
+		`mark2' ///
+		`scat2'	///
 		, ///
 		xtitle("") ytitle("") ///
 		ylabel(`ylist', valuelabels labsize(`ylabsize') nogrid ) ///
-		xlabel(`xlist', labsize(`xlabsize') angle(`xlabangle') nogrid) ///
 		yscale(noline) ///
 		xscale(noline range(`xrmin' `xrmax')) ///
 		legend(off)  `options' 
