@@ -1,19 +1,19 @@
 {smcl}
-{* 22Oct2024}{...}
+{* 16Feb2025}{...}
 {hi:help bumpline}{...}
-{right:{browse "https://github.com/asjadnaqvi/stata-bumpline":bumpline v1.3 (GitHub)}}
+{right:{browse "https://github.com/asjadnaqvi/stata-bumpline":bumpline v1.4 (GitHub)}}
 
 {hline}
 
-{title:bumpline}: A Stata package for bump line charts.
+{title:bumpline}: A Stata package for bumpline charts.
 
 
 {marker syntax}{title:Syntax}
 {p 8 15 2}
 
 {cmd:bumpline} {it:y x} {ifin} {weight}, {cmd:by}(varname) 
-		{cmd:[} {cmd:top}({it:num}) {cmdab:sel:ect(any|last)} {cmd:smooth}({it:num}) {cmd:palette}({it:str}) {cmd:labcond}({it:str}) {cmd:offset}({it:num}) {cmd:dropother} {cmd:wrap}({it:num}) {cmd:stat}({it:mean}|{it:sum}) 
-		  {cmdab:lw:idth}({it:str}) {cmdab:lp:attern}({it:str}) 
+		{cmd:[} {cmd:top}({it:num}) {cmdab:sel:ect(any|last)} {cmd:smooth}({it:num}) {cmd:palette}({it:str}) {cmd:colorby}({it:var}) {cmd:labcond}({it:str}) {cmd:offset}({it:num}) 
+		  {cmd:dropother} {cmd:wrap}({it:num}) {cmd:stat}({it:mean}|{it:sum})  {cmdab:lw:idth}({it:str}) {cmdab:lp:attern}({it:str}) 
 		  {cmdab:ms:ize}({it:str}) {cmdab:msym:bol}({it:str}) {cmdab:mc:olor}({it:str}) {cmdab:mlc:olor}({it:str}) {cmdab:mlw:idth}({it:str}) 
 		  {cmdab:labs:ize}({it:str}) {cmdab:labc:olor}({it:str}) {cmdab:laba:ngle}({it:str}) {cmdab:labpos:ition}({it:str}) {cmdab:labg:ap}({it:str})
 		  {cmdab:olc:olor}({it:str}) {cmdab:olw:idth}({it:str}) {cmdab:olp:attern}({it:str})   
@@ -44,6 +44,8 @@ of the {opt top()}. The option {opt sel(last)} tracks the path of the {opt top()
 while a value of 8 shows almost vertical jumps.{p_end}
 
 {p2coldent : {opt palette(str)}}Color name is any named scheme defined in the {stata help colorpalette:colorpalette} package. Default is {stata colorpalette tableau:{it:tableau}}.{p_end}
+
+{p2coldent : {opt colorby(var)}}Color by a specific numeric variable, that takes on discrete values starting from 1. Missing values will be assigned the color after the highest value.{p_end}
 
 {p2coldent : {opt offset(num)}}Extends the x-axis range to accommodate labels. The default value is {opt offset(15)} for 15% of {it:xmax-xmin}.{p_end}
 
@@ -144,17 +146,27 @@ Please make sure that you have the latest versions of the following packages ins
 {stata ssc install colrspace, replace}
 {stata ssc install graphfunctions, replace}
 
+
 {title:Examples}
 
 See {browse "https://github.com/asjadnaqvi/stata-bumpline":GitHub}.
 
-{hline}
+
+{title:Feedback}
+
+Please submit bugs, errors, feature requests on {browse "https://github.com/asjadnaqvi/stata-bumpline/issues":GitHub} by opening a new issue.
+
+
+{title:Citation guidelines}
+
+See {browse "https://ideas.repec.org/c/boc/bocode/s459195.html"} for the official SSC citation. 
+Please note that the GitHub version might be newer than the SSC version.
 
 
 {title:Package details}
 
-Version      : {bf:bumpline} v1.3
-This release : 22 Oct 2024
+Version      : {bf:bumpline} v1.4
+This release : 16 Feb 2025
 First release: 10 Apr 2023
 Repository   : {browse "https://github.com/asjadnaqvi/stata-bumpline":GitHub}
 Keywords     : Stata, graph, bump chart, rank plot
@@ -165,26 +177,6 @@ E-mail       : asjadnaqvi@gmail.com
 Twitter      : {browse "https://twitter.com/AsjadNaqvi":@AsjadNaqvi}
 
 
-{title:Feedback}
-
-Please submit bugs, errors, feature requests on {browse "https://github.com/asjadnaqvi/stata-bumpline/issues":GitHub} by opening a new issue.
-
-{title:Citation guidelines}
-
-Suggested citation guidlines for this package:
-
-Naqvi, A. (2024). Stata package "bumpline" version 1.3. Release date 22 October 2024. https://github.com/asjadnaqvi/stata-bumpline.
-
-@software{bumpline,
-   author = {Naqvi, Asjad},
-   title = {Stata package ``bumpline''},
-   url = {https://github.com/asjadnaqvi/stata-bumpline},
-   version = {1.3},
-   date = {2024-10-22}
-}
-
-
-
 {title:References}
 
 {p 4 8 2}Jann, B. (2018). {browse "https://www.stata-journal.com/article.html?article=gr0075":Color palettes for Stata graphics}. The Stata Journal 18(4): 765-785.
@@ -193,9 +185,8 @@ Naqvi, A. (2024). Stata package "bumpline" version 1.3. Release date 22 October 
 
 
 {title:Other visualization packages}
-
 {psee}
-    {helpb arcplot}, {helpb alluvial}, {helpb bimap}, {helpb bumparea}, {helpb bumpline}, {helpb circlebar}, {helpb circlepack}, {helpb clipgeo}, {helpb delaunay}, {helpb joyplot}, 
-	{helpb marimekko}, {helpb polarspike}, {helpb sankey}, {helpb schemepack}, {helpb spider}, {helpb streamplot}, {helpb sunburst}, {helpb treecluster}, {helpb treemap}, {helpb waffle}
-	
-or visit {browse "https://github.com/asjadnaqvi":GitHub} for detailed documentation and examples.		
+    {helpb arcplot}, {helpb alluvial}, {helpb bimap}, {helpb bumparea}, {helpb bumpline}, {helpb circlebar}, {helpb circlepack}, {helpb clipgeo}, {helpb delaunay}, {helpb graphfunctions}, {helpb geoboundary}, {helpb geoflow}, {helpb joyplot}, 
+	{helpb marimekko}, {helpb polarspike}, {helpb sankey}, {helpb schemepack}, {helpb spider}, {helpb splinefit}, {helpb streamplot}, {helpb sunburst}, {helpb ternary}, {helpb treecluster}, {helpb treemap}, {helpb trimap}, {helpb waffle}
+
+Visit {browse "https://github.com/asjadnaqvi":GitHub} for further information.	

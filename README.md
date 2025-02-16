@@ -9,21 +9,21 @@
 
 ---
 
-# bumpline v1.3
-(22 October 2024)
+# bumpline v1.4
+(16 Feb 2025)
 
 
 ## Installation
 
 The package can be installed via SSC or GitHub. The GitHub version, *might* be more recent due to bug fixes, feature updates etc, and *may* contain syntax improvements and changes in *default* values. See version numbers below. Eventually the GitHub version is published on SSC.
 
-SSC (**v1.21**):
+SSC (**v1.3**):
 
 ```
 ssc install bumpline, replace
 ```
 
-GitHub (**v1.3**):
+GitHub (**v1.4**):
 
 ```
 net install bumpline, from("https://raw.githubusercontent.com/asjadnaqvi/stata-bumpline/main/installation/") replace
@@ -61,14 +61,15 @@ The syntax for the latest version is as follows:
 
 ```stata
 bumpline y x [if] [in] [weight], by(varname) 
-                [ top(num) select(any|last) smooth(num) palette(str) labcond(str) offset(num) dropother wrap(num) stat(mean|sum) 
-                  lwidth(str) lpattern(str) 
+                [ top(num) select(any|last) smooth(num) palette(str) colorby(var) labcond(str) offset(num) 
+                  dropother wrap(num) stat(mean|sum)  lwidth(str) lpattern(str) 
                   msize(str) msymbol(str) mcolor(str) mlcolor(str) mlwidth(str) 
                   labsize(str) labcolor(str) labangle(str) labposition(str) labgap(str)
                   olcolor(str) olwidth(str) olpattern(str)   
                   omcolor(str) omsymbol(str) omsize(str) omlcolor(str) omlwidth(str)   
                   olabsize(str) olabcolor(str) olabangle(str) olabposition(str) olabgap(str)
                   ylabsize(str) * ]
+
 ```
 
 See the help file `help bumpline` for details.
@@ -83,30 +84,9 @@ where `y` is a numerical variable we want to plot and `x` is the time dimension.
 
 
 ## Citation guidelines
-Software packages take countless hours of programming, testing, and bug fixing. If you use this package, then a citation would be highly appreciated. Suggested citations:
+Software packages take countless hours of programming, testing, and bug fixing. If you use this package, then a citation would be highly appreciated. 
 
-*in BibTeX*
-
-```
-@software{bumpline,
-   author = {Naqvi, Asjad},
-   title = {Stata package ``bumpline''},
-   url = {https://github.com/asjadnaqvi/stata-bumpline},
-   version = {1.3},
-   date = {2024-10-22}
-}
-```
-
-*or simple text*
-
-```
-Naqvi, A. (2024). Stata package "bumpline" version 1.3. Release date 22 October 2024. https://github.com/asjadnaqvi/stata-bumpline.
-```
-
-
-*or see [SSC citation](https://ideas.repec.org/c/boc/bocode/s459195.html) (updated once a new version is submitted)*
-
-
+The [SSC citation](https://ideas.repec.org/c/boc/bocode/s459195.html) is recommended. Please note that the GitHub version might be newer than the SSC version.
 
 ## Examples
 
@@ -293,6 +273,26 @@ smooth(8) top(16) palette(CET L20, reverse) labc(white) ///
 
 
 
+### v1.4
+
+Define a custom color variable:
+
+```stata
+gen focus = .
+
+replace focus = 1 if inlist(country, "China", "Japan", "Indonesia")
+replace focus = 2 if inlist(country, "United States", "Canada", "Brazil")
+```
+
+Pass it to the command and also control the colors:
+
+```stata
+bumpline total_ghg year, by(country) top(10) xsize(3) ysize(1) colorby(focus) palette(eltblue orange gs13) dropother 
+```
+
+<img src="/figures/bumpline16.png" width="100%">
+
+
 ## Feedback
 
 Please open an [issue](https://github.com/asjadnaqvi/stata-bumpline/issues) to report errors, feature enhancements, and/or other requests.
@@ -300,7 +300,11 @@ Please open an [issue](https://github.com/asjadnaqvi/stata-bumpline/issues) to r
 
 ## Change log
 
-**v1.3 (22 October 2024)**
+**v1.4 (16 Fen 2025)**
+- `colorby()` option added.
+- Minor improvements to defaults and the syntax.
+
+**v1.3 (22 Oct 2024)**
 - `wrap()` ported to `graphfunctions`. 
 - Weights are now allowed.
 - Added options `stat(mean)` and `stat(sum)` (default) for collapsing the data. If the data has duplicate values, collapse will be used and a warning message will be displayed.

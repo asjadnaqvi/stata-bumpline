@@ -1,6 +1,7 @@
-*! bumpline v1.3 (22 Oct 2024)
+*! bumpline v1.4 (16 Feb 2025)
 *! Asjad Naqvi (asjadnaqvi@gmail.com, @AsjadNaqvi)
 
+* v1.4  (16 Feb 2025): colorby() added. Other clean ups.
 * v1.3  (22 Oct 2024): stat(mean|sum) added. default is sum. xlabel options removed. dropother added. extensive label, line, marker control options added.
 * v1.21 (11 Jun 2024): added wrap() for label wrapping. Code clean up
 * v1.2  (10 Feb 2024): minor cleanups, fixes to how colors are assigned.
@@ -14,14 +15,14 @@ version 15
 	
 syntax varlist(min=2 max=2) [if] [in] [aw fw pw iw/], by(varname)  ///
 	[ top(real 10) smooth(real 4) SELect(string) palette(string) offset(real 15)  ] ///
-	[ YLABSize(string) points(real 50) wrap(numlist >=0 max=1) * stat(string) dropother ]  ///
+	[ YLABSize(string) points(real 50) wrap(numlist >=0 max=1) stat(string) dropother ]  ///
 	[ LWidth(string) LPattern(string) ]  ///    // standard lines
 	[ MSize(string) MSYMbol(string) MLWidth(string) MLColor(string) MColor(string) ] ///   // standard markers
 	[ LABSize(string)  LABColor(string) LABAngle(string) LABPosition(string) LABGap(string)    ] 	///		// standard labels	
 	[ OLColor(string) OLWidth(string) OLPattern(string) ] ///  // other lines // v1.3
 	[ OMColor(string) OMLWidth(string) OMLColor(string) OMSYMbol(string) OMSize(string) ] ///  // other markers
 	[ OLABSize(string) OLABColor(string) OLABAngle(string) OLABPosition(string) OLABGap(string) ] ///  // other labels
-	
+	[ colorby(varname) *  ] // v1.4 options
 	
 	
 	// check dependencies
@@ -49,8 +50,16 @@ quietly {
 preserve	
 
 	keep if `touse'
+	
+	if "`colorby'" !="" {
+		gen _mycolors = `colorby'
+	}
+	else {
+		gen _mycolors = .
+	}
+	
 
-	keep `varlist' `by' `exp'
+	keep `varlist' `by' `exp' _mycolors
 
 	
 	gettoken yvar xvar : varlist 
@@ -71,7 +80,7 @@ preserve
 	
 	if "`weight'" != "" local myweight  [`weight' = `exp']	
 
-	collapse (`stat') `yvar' `myweight', by(`by' `xvar')	
+	collapse (`stat') `yvar'  (first) _mycolors `myweight', by(`by' `xvar')	
 	
 	egen _x = group(`xvar')
 
@@ -83,13 +92,17 @@ preserve
 
 	sort `xvar' _rank
 
+	
 	summ _x, meanonly
 	local last = r(max)
 
 	gen _mark = 1 if _rank <= `top' & _x==`last'
 
+
 	bysort `by': egen _maxlast = max(_mark)
 	recode _maxlast (.=0)
+
+	
 	
 	
 	if "`select'"=="any" | "`select'"=="" {
@@ -230,30 +243,72 @@ preserve
 		}
 		
 
-		colorpalette `palette', nograph n(`top') `poptions'
 		
 		
-		local lines `lines' (line _yval _xval if _group==`x' & _maxlast==1, lw(`lwidth') lp(`lpattern') lc("`r(p`clr')'") cmissing(n))
+		if "`colorby'"== "" {	
+			colorpalette `palette', nograph n(`top') `poptions'
+			local lines `lines' (line _yval _xval if _group==`x' & _maxlast==1, lw(`lwidth') lp(`lpattern') lc("`r(p`clr')'") cmissing(no))
+			
+			if "`mcolor'" == "" {
+				local mclr `r(p`clr')'
+			}
+			else {
+				local mclr `mcolor'
+			}
+			
+			if "`mlcolor'" == "" {
+				local mlclr `r(p`clr')'
+			}
+			else {
+				local mlclr `mlcolor'
+			}
+					
 		
 		
-		if "`mcolor'" == "" {
-			local mclr `r(p`clr')'
+			local marks `marks' (scatter _rankrev `xvar' if _group==`x' & _tagxy==1 & _maxlast==1, msym(`msymbol') mlwidth(`mlwidth') msize(`msize')  mc("`mclr'") mlc("`mlclr'") )
+		
+		
 		}
-		else {
-			local mclr `mcolor'
-		}
 		
-		if "`mlcolor'" == "" {
-			local mlclr `r(p`clr')'
-		}
-		else {
-			local mlclr `mlcolor'
-		}
-		
-		
-		local marks `marks' (scatter _rankrev `xvar' if _group==`x' & _tagxy==1 & _maxlast==1, msym(`msymbol') mlwidth(`mlwidth') msize(`msize')  mc("`mclr'") mlc("`mlclr'") )
-		
+
 	}
+	
+	
+	
+		if "`colorby'"!= "" {
+			summ _mycolors, meanonly
+			local items = r(max) + 1
+			replace _mycolors = `items' if missing(_mycolors)
+			
+			
+			forval i = 1/`items' {
+				colorpalette `palette', nograph n(`items') `poptions'
+				
+				local lines `lines' (line _yval _xval 		 if _mycolors==`i' & _maxlast==1, lw(`lwidth') lp(`lpattern') lc("`r(p`i')'") cmissing(no))
+				
+				if "`mcolor'" == "" {
+					local mclr `r(p`i')'
+				}
+				else {
+					local mclr `mcolor'
+				}
+				
+				if "`mlcolor'" == "" {
+					local mlclr `r(p`i')'
+				}
+				else {
+					local mlclr `mlcolor'
+				}
+				
+				
+				local marks `marks' (scatter _rankrev `xvar' if _mycolors==`i' & _tagxy==1 & _maxlast==1, msym(`msymbol') mlwidth(`mlwidth') msize(`msize')  mc("`mclr'") mlc("`mlclr'") )
+				
+			}
+			
+				
+			
+			
+		}	
 
 	
 	if "`olwidth'"  == "" local olwidth `lwidth'
@@ -325,22 +380,22 @@ preserve
 	local ylist = "`r(levels)'"
 	
 
-	
 	if "`ylabsize'"      == "" local ylabsize  2.5	
+	
+	lab var _rankrev "Rank"
 
 	//////////////
 	// 	draw 	//
 	//////////////
 
 	twoway ///
-		(scatter _rankrev `xvar' if _taglast==1				 , mlabel(`by') mlabpos(`labposition') mlabsize(`labsize') mc(none) mlabgap(`labgap') mlabangle(`labangle') mlabcolor(`labcolor')) ///
+		(scatter _rankrev `xvar' if _taglast==1, mlabel(`by') mlabpos(`labposition') mlabsize(`labsize') mc(none) mlabgap(`labgap') mlabangle(`labangle') mlabcolor(`labcolor')) ///
 		`lines' ///
 		`marks' ///
 		`line2'	///
 		`mark2' ///
 		`scat2'	///
 		, ///
-		xtitle("") ytitle("") ///
 		ylabel(`ylist', valuelabels labsize(`ylabsize') nogrid ) ///
 		yscale(noline) ///
 		xscale(noline range(`xrmin' `xrmax')) ///
