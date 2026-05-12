@@ -3,6 +3,6 @@ authors:
 - family-names: "Naqvi"
   given-names: "Asjad"
 title: "Stata package ``bumpline''"
-version: 1.4
-date-released: 2025-02-16
+version: 1.41
+date-released: 2026-05-12
 url: "https://github.com/asjadnaqvi/stata-bumpline"

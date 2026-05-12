@@ -9,8 +9,8 @@
 
 
 
-# bumpline v1.4
-(16 Feb 2025)
+# bumpline v1.41
+(12 May 2026)
 
 
 ## Installation
@@ -23,7 +23,7 @@ SSC (**v1.4**):
 ssc install bumpline, replace
 ```
 
-GitHub (**v1.4**):
+GitHub (**v1.41**):
 
 ```
 net install bumpline, from("https://raw.githubusercontent.com/asjadnaqvi/stata-bumpline/main/installation/") replace
@@ -61,7 +61,7 @@ The syntax for the latest version is as follows:
 
 ```stata
 bumpline y x [if] [in] [weight], by(varname) 
-                [ top(num) select(any|last) smooth(num) palette(str) colorby(var) labcond(str) offset(num) 
+								[ top(num) select(any|last) smooth(num) palette(str) colorby(var) labcond(str) offset(num) xlabel(str)
                   dropother wrap(num) stat(mean|sum)  lwidth(str) lpattern(str) 
                   msize(str) msymbol(str) mcolor(str) mlcolor(str) mlwidth(str) 
                   labsize(str) labcolor(str) labangle(str) labposition(str) labgap(str)
@@ -299,6 +299,9 @@ Please open an [issue](https://github.com/asjadnaqvi/stata-bumpline/issues) to r
 
 
 ## Change log
+
+**v1.41 (12 May 2026)**
+- Added `xlabel(string)` support back with default x-axis labels based on observed x values.
 
 **v1.4 (16 Fen 2025)**
 - `colorby()` option added.

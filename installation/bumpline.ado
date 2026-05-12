@@ -1,6 +1,7 @@
-*! bumpline v1.4 (16 Feb 2025)
-*! Asjad Naqvi (asjadnaqvi@gmail.com, @AsjadNaqvi)
+*! bumpline v1.41 (12 May 2026)
+*! Asjad Naqvi (asjadnaqvi@gmail.com)
 
+* v1.41 (12 May 2026): xlabel(string) restored; defaults now use x values and value labels when available.
 * v1.4  (16 Feb 2025): colorby() added. Other clean ups.
 * v1.3  (22 Oct 2024): stat(mean|sum) added. default is sum. xlabel options removed. dropother added. extensive label, line, marker control options added.
 * v1.21 (11 Jun 2024): added wrap() for label wrapping. Code clean up
@@ -22,7 +23,7 @@ syntax varlist(min=2 max=2) [if] [in] [aw fw pw iw/], by(varname)  ///
 	[ OLColor(string) OLWidth(string) OLPattern(string) ] ///  // other lines // v1.3
 	[ OMColor(string) OMLWidth(string) OMLColor(string) OMSYMbol(string) OMSize(string) ] ///  // other markers
 	[ OLABSize(string) OLABColor(string) OLABAngle(string) OLABPosition(string) OLABGap(string) ] ///  // other labels
-	[ colorby(varname) *  ] // v1.4 options
+	[ colorby(varname) XLABel(string asis) *  ] // v1.4 options
 	
 	
 	// check dependencies
@@ -80,7 +81,7 @@ preserve
 	
 	if "`weight'" != "" local myweight  [`weight' = `exp']	
 
-	collapse (`stat') `yvar'  (first) _mycolors `myweight', by(`by' `xvar')	
+	collapse (`stat') `yvar' (first) _mycolors `myweight', by(`by' `xvar')	
 	
 	egen _x = group(`xvar')
 
@@ -102,8 +103,6 @@ preserve
 	bysort `by': egen _maxlast = max(_mark)
 	recode _maxlast (.=0)
 
-	
-	
 	
 	if "`select'"=="any" | "`select'"=="" {
 		drop if _rank > `top'  // hard ranks 
@@ -153,7 +152,6 @@ preserve
 	replace _ranklast = _rank if _taglast==0 & _tagctry==1
 	
 	
-	
 	// we interporate upto x-1 items	
 	gen double _xval = .
 	gen double _yval = .
@@ -164,10 +162,8 @@ preserve
 	levelsof _group, local(grp)
 	
 	forval i = 1/`items' {
-		
 		local j = `i' + 1
 		
-
 		foreach y of local grp {
 			
 			// x
@@ -304,10 +300,6 @@ preserve
 				local marks `marks' (scatter _rankrev `xvar' if _mycolors==`i' & _tagxy==1 & _maxlast==1, msym(`msymbol') mlwidth(`mlwidth') msize(`msize')  mc("`mclr'") mlc("`mlclr'") )
 				
 			}
-			
-				
-			
-			
 		}	
 
 	
@@ -343,8 +335,8 @@ preserve
 	
 	// control the x axis
 	summ `xvar', meanonly
-	local xrmin = `r(min)'
-	summ `xvar', meanonly
+	local xrmin = r(min)
+	*summ `xvar', meanonly
 	local xrmax = r(max) + ((r(max) - r(min)) * (`offset' / 100)) 	
 	
 	
@@ -378,6 +370,19 @@ preserve
 	
 	levelsof _rankrev
 	local ylist = "`r(levels)'"
+
+	if "`xlabel'" == "" {
+		levelsof `xvar', local(xlist)
+		if "`: value label `xvar''" != "" {
+			local xlabopt xlabel(`xlist', valuelabel)
+		}
+		else {
+			local xlabopt xlabel(`xlist')
+		}
+	}
+	else {
+		local xlabopt xlabel(`xlabel')
+	}
 	
 
 	if "`ylabsize'"      == "" local ylabsize  2.5	
@@ -397,6 +402,7 @@ preserve
 		`scat2'	///
 		, ///
 		ylabel(`ylist', valuelabels labsize(`ylabsize') nogrid ) ///
+		`xlabopt' ///
 		yscale(noline) ///
 		xscale(noline range(`xrmin' `xrmax')) ///
 		legend(off)  `options' 
